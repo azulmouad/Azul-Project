@@ -1,6 +1,6 @@
 # azul_project
 
-A new Flutter application.
+Challenge app: News app that lists news, and a single page with swiping feature.
 
 ## Getting Started
 
