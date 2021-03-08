@@ -4,6 +4,7 @@ import 'package:azul_project/screens/content_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class CardPostNews extends StatelessWidget {
   final onTap;
@@ -118,12 +119,7 @@ class ArticlePages extends StatelessWidget {
       children: [
         CardPostNews(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ContentScreen(),
-              ),
-            );
+            Get.to(() => ContentScreen());
           },
         ),
         CardPostNews(),

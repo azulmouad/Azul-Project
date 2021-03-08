@@ -2,6 +2,7 @@ import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,7 +11,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: kAppName,
       theme: ThemeData(
         primarySwatch: Colors.purple,
@@ -32,6 +33,8 @@ class MyApp extends StatelessWidget {
           ),
         );
       },
+      transitionDuration: Duration(milliseconds: 300),
+      defaultTransition: Transition.fadeIn,
       home: HomeScreen(),
     );
   }
