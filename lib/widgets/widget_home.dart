@@ -14,6 +14,7 @@ class CardPostNews extends StatelessWidget {
   final Categories category;
   final linkFeature;
   final date;
+  final idNews;
 
   CardPostNews({
     @required this.onTap,
@@ -21,6 +22,7 @@ class CardPostNews extends StatelessWidget {
     @required this.linkFeature,
     @required this.date,
     @required this.category,
+    @required this.idNews,
   });
 
   @override
@@ -81,7 +83,7 @@ class CardPostNews extends StatelessWidget {
               style: kStyleTitlePost,
             ),
             Text(
-              '$date',
+              '${getDatePostNews(date)}',
               style: TextStyle(
                 color: Colors.grey,
               ),

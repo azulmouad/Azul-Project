@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'colors.dart';
 
@@ -31,3 +32,13 @@ const kStyleDecripPost = TextStyle(
   fontWeight: FontWeight.normal,
   color: kColorBlack01,
 );
+
+///convert date
+
+String getDatePostNews(dateTime) {
+  return '${DateFormat("dd MMM yyyy", 'ar').format(dateTime)}';
+}
+
+String getDatePostArticle(dateTime) {
+  return '${DateFormat("HH:mm - dd/MM/yyyy").format(dateTime)}';
+}

@@ -3,8 +3,10 @@ import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  await initializeDateFormatting('ar');
   runApp(MyApp());
 }
 

@@ -18,6 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController _listController = ScrollController();
 
   int _indexCategory = 0; // Home as Default
+  int _pageCount = 1; // Count 1 as Default
+  bool _progress = true;
 
   List<Categories> _listCategories = [];
   List<News> _listNews = [];
@@ -36,17 +38,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _getNewsSelectedCategory() async {
-    final List<News> _listNewsApi = await ApiHelper.getHomeNews();
+    final List<News> _listNewsApi =
+        await ApiHelper.getHomeNews(pageIndex: _pageCount);
     for (var news in _listNewsApi) {
+      // if (_listCategories[_indexCategory].id == news.categories[0]) {
+      //   print(
+      //       '${_listCategories[_indexCategory].id} ${news.categories[0]} : ${news.title.rendered}');
+      // } else {
+      //   print(
+      //       '${_listCategories[_indexCategory].id} ${news.categories[0]} : ${news.title.rendered}');
+      // }
+
       setState(() {
         _listNews.add(News(
           id: news.id,
           title: news.title,
           date: news.date,
           links: news.links,
+          content: news.content,
         ));
       });
     }
+
+    setState(() {
+      _progress = false;
+    });
   }
 
   @override
@@ -98,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+          _progress ? LinearProgressIndicator() : SizedBox(),
           Flexible(
             child: PageView(
               controller: _pageController,
@@ -116,6 +133,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ArticlePages(
                     newsContent: _listNews,
                     caty: _listCategories[_indexCategory],
+                    onLoadMore: () {
+                      setState(() {
+                        _progress = true;
+                        _pageCount = _pageCount + 1;
+                      });
+                      _getNewsSelectedCategory();
+                    },
                   ),
               ],
             ),

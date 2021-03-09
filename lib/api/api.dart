@@ -4,12 +4,13 @@ import 'dart:core';
 import 'package:azul_project/models/categories.dart';
 import 'package:azul_project/models/news.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 class ApiHelper {
-  static Future<List<News>> getHomeNews() async {
+  static Future<List<News>> getHomeNews({@required pageIndex}) async {
     try {
-      final _response =
-          await Dio().get('https://soltana.ma/wp-json/wp/v2/posts?page=1');
+      final _response = await Dio()
+          .get('https://soltana.ma/wp-json/wp/v2/posts?page=$pageIndex');
 
       if (_response.statusCode == 200) {
         // print(_response.data);
@@ -45,7 +46,7 @@ class ApiHelper {
   }
 
   static Future<dynamic> getImagePost({link}) async {
-    print('link image : $link');
+    //print('link image : $link');
 
     try {
       final _response = await Dio().get('$link');

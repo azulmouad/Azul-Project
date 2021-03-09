@@ -55,7 +55,7 @@ class CardBarContent extends StatelessWidget {
 
     return Container(
       width: mSize.size.width,
-      height: 60.0,
+      height: 55.0,
       decoration: BoxDecoration(
         color: kColorWhite,
         boxShadow: [
@@ -72,6 +72,7 @@ class CardBarContent extends StatelessWidget {
             icon: Icon(
               FontAwesomeIcons.alignRight,
               color: kColorGrey02,
+              size: 20.0,
             ),
             onPressed: () {},
           ),
@@ -83,6 +84,7 @@ class CardBarContent extends StatelessWidget {
             icon: Icon(
               Icons.arrow_forward_ios,
               color: kColorGrey02,
+              size: 20.0,
             ),
             onPressed: () => Navigator.pop(context),
           ),
