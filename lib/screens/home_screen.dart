@@ -1,8 +1,12 @@
+import 'package:azul_project/api/api.dart';
+import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/helpers/constants.dart';
+import 'package:azul_project/models/categories.dart';
+import 'package:azul_project/models/news.dart';
+import 'package:azul_project/screens/page_feed_news.dart';
 import 'package:azul_project/widgets/widget_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,53 +14,113 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  PageController _pageController = PageController();
+  ScrollController _listController = ScrollController();
+
   int _indexCategory = 0; // Home as Default
+
+  List<Categories> _listCategories = [];
+  List<News> _listNews = [];
+
+  _getCategories() async {
+    final _categories = await ApiHelper.getHomeCategories();
+
+    for (var i = 0; i < _categories.length; i++) {
+      setState(() {
+        _listCategories.add(Categories(
+          name: _categories[i].name,
+          id: _categories[i].id,
+        ));
+      });
+    }
+  }
+
+  _getNewsSelectedCategory() async {
+    final List<News> _listNewsApi = await ApiHelper.getHomeNews();
+    for (var news in _listNewsApi) {
+      setState(() {
+        _listNews.add(News(
+          id: news.id,
+          title: news.title,
+          date: news.date,
+          links: news.links,
+        ));
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    _getCategories();
+    _getNewsSelectedCategory();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final mSize = MediaQuery.of(context);
-
+    // _getNewsSelectedCategory();
     return Scaffold(
-      body: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: [
-            CardBarHome(
-              onTap: () {
-                //TODO: open drawer
-              },
+      body: Column(
+        children: [
+          CardBarHome(
+            onTap: () {
+              //TODO: open drawer
+            },
+          ),
+          Divider(
+            color: Colors.grey.withOpacity(0.2),
+            height: 0.05,
+          ),
+          Container(
+            width: mSize.size.width,
+            height: 45.0,
+            decoration: BoxDecoration(
+              gradient: kGradientBar,
             ),
-            Divider(
-              color: Colors.grey.withOpacity(0.2),
-              height: 0.05,
-            ),
-            Container(
-              width: mSize.size.width,
-              height: 45.0,
-              decoration: BoxDecoration(
-                gradient: kGradientBar,
-              ),
-              child: TabBar(
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                      icon: Icon(
-                    FontAwesomeIcons.home,
-                    size: 20.0,
-                  )),
-                  Tab(text: 'سياسة'),
-                  Tab(text: 'مجتمع'),
-                ],
-              ),
-            ),
-            Flexible(
-                child: TabBarView(
+            child: ListView(
+              controller: _listController,
+              scrollDirection: Axis.horizontal,
               children: [
-                for (int i = 0; i < 3; i++) ArticlePages(),
+                for (int i = 0; i < _listCategories.length; i++)
+                  CardTab(
+                    name: _listCategories[i].name,
+                    isSelected: _indexCategory == i,
+                    onTap: () {
+                      setState(() {
+                        _indexCategory = i;
+                        _pageController.animateToPage(_indexCategory,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInBack);
+                      });
+                    },
+                  ),
               ],
-            )),
-          ],
-        ),
+            ),
+          ),
+          Flexible(
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (int index) {
+                setState(() {
+                  _indexCategory = index;
+                });
+                _listController.animateTo(
+                  50.0 * index,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.fastOutSlowIn,
+                );
+              },
+              children: [
+                for (int i = 0; i < _listCategories.length; i++)
+                  ArticlePages(
+                    newsContent: _listNews,
+                    caty: _listCategories[_indexCategory],
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

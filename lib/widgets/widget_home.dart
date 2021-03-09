@@ -1,5 +1,7 @@
+import 'package:azul_project/api/api.dart';
 import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/helpers/constants.dart';
+import 'package:azul_project/models/categories.dart';
 import 'package:azul_project/screens/content_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,18 @@ import 'package:get/get.dart';
 
 class CardPostNews extends StatelessWidget {
   final onTap;
+  final title;
+  final Categories category;
+  final linkFeature;
+  final date;
 
-  CardPostNews({this.onTap});
+  CardPostNews({
+    @required this.onTap,
+    @required this.title,
+    @required this.linkFeature,
+    @required this.date,
+    @required this.category,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +39,24 @@ class CardPostNews extends StatelessWidget {
                   height: 230.0,
                   margin: EdgeInsets.only(bottom: 10.0),
                   color: kColorGreyNoMedia,
-                  child: Center(
-                    child: Image(
-                      image: AssetImage('assets/images/img_no_media.png'),
-                      width: 100.0,
-                    ),
-                  ),
+                  child: FutureBuilder(
+                      future: ApiHelper.getImagePost(link: linkFeature),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Image(
+                              image:
+                                  AssetImage('assets/images/img_no_media.png'),
+                              width: 100.0,
+                            ),
+                          );
+                        }
+
+                        return Image(
+                          image: NetworkImage(snapshot.data),
+                          fit: BoxFit.cover,
+                        );
+                      }),
                 ),
                 Positioned(
                   bottom: 0,
@@ -44,7 +68,7 @@ class CardPostNews extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     child: Text(
-                      'يحسم',
+                      '${category.name}',
                       style: kStyleCategory,
                     ),
                   ),
@@ -53,11 +77,11 @@ class CardPostNews extends StatelessWidget {
             ),
             SizedBox(height: 5),
             Text(
-              'مجلس النواب يحسم في جدل تقاعد البرلمانيين الأسبوع المقبل',
+              '$title',
               style: kStyleTitlePost,
             ),
             Text(
-              '12 yonyo 2020',
+              '$date',
               style: TextStyle(
                 color: Colors.grey,
               ),
@@ -111,20 +135,32 @@ class CardBarHome extends StatelessWidget {
   }
 }
 
-class ArticlePages extends StatelessWidget {
+class CardTab extends StatelessWidget {
+  final name;
+  final bool isSelected;
+  final Function onTap;
+
+  CardTab({this.name, this.isSelected, this.onTap});
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.symmetric(),
-      children: [
-        CardPostNews(
-          onTap: () {
-            Get.to(() => ContentScreen());
-          },
+    final mSize = MediaQuery.of(context).size;
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        height: 45.0,
+        child: Center(
+          child: Text(
+            '$name',
+            style: TextStyle(
+              fontSize: isSelected ? 16.0 : 14.0,
+              fontWeight: FontWeight.normal,
+              color: isSelected ? kColorWhite : kColorWhite.withOpacity(0.4),
+            ),
+          ),
         ),
-        CardPostNews(),
-        CardPostNews(),
-      ],
+      ),
     );
   }
 }
