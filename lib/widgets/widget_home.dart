@@ -1,4 +1,3 @@
-
 import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/models/categories.dart';
@@ -143,7 +142,6 @@ class CardTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- 
     return InkWell(
       onTap: onTap,
       child: Container(

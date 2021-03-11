@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:azul_project/api/api.dart';
@@ -112,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CardBarHome(
             onTap: () {
-              //TODO: open drawer
+              // open drawer
             },
           ),
           Divider(
