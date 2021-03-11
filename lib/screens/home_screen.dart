@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           date: news.date,
           links: news.links,
           content: news.content,
+          image: news.image,
         ));
       });
     }

@@ -4,6 +4,7 @@ import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/models/categories.dart';
 import 'package:azul_project/models/news.dart';
 import 'package:azul_project/widgets/widgets_content_news.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -80,26 +81,19 @@ class _ContentScreenState extends State<ContentScreen> {
                                 height: 230.0,
                                 margin: EdgeInsets.only(bottom: 10.0),
                                 color: kColorGreyNoMedia,
-                                child: FutureBuilder(
-                                    future: ApiHelper.getImagePost(
-                                      link: widget.listNews[i].links
-                                          .wpFeaturedmedia[0].href,
-                                    ),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: Image(
-                                            image: AssetImage(
-                                                'assets/images/img_no_media.png'),
-                                            width: 100.0,
-                                          ),
-                                        );
-                                      }
-                                      return Image(
-                                        image: NetworkImage(snapshot.data),
-                                        fit: BoxFit.cover,
-                                      );
-                                    }),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.listNews[i].image,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (c, v, i) {
+                                    return Center(
+                                      child: Image(
+                                        image: AssetImage(
+                                            'assets/images/img_no_media.png'),
+                                        width: 100.0,
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                               Positioned(
                                 bottom: 0,

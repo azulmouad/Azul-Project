@@ -1,4 +1,3 @@
-import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/models/categories.dart';
 import 'package:azul_project/models/news.dart';
 import 'package:azul_project/widgets/widget_home.dart';
@@ -29,7 +28,7 @@ class ArticlePages extends StatelessWidget {
           CardPostNews(
             title: newsContent[index].title.rendered,
             date: newsContent[index].date,
-            linkFeature: newsContent[index].links.wpFeaturedmedia[0].href,
+            image: newsContent[index].image,
             category: caty,
             idNews: newsContent[index].id,
             onTap: () {

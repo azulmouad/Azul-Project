@@ -3,23 +3,23 @@ import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/models/categories.dart';
 import 'package:azul_project/screens/content_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 
 class CardPostNews extends StatelessWidget {
   final onTap;
   final title;
   final Categories category;
-  final linkFeature;
+  final image;
   final date;
   final idNews;
 
   CardPostNews({
     @required this.onTap,
     @required this.title,
-    @required this.linkFeature,
+    @required this.image,
     @required this.date,
     @required this.category,
     @required this.idNews,
@@ -41,24 +41,18 @@ class CardPostNews extends StatelessWidget {
                   height: 230.0,
                   margin: EdgeInsets.only(bottom: 10.0),
                   color: kColorGreyNoMedia,
-                  child: FutureBuilder(
-                      future: ApiHelper.getImagePost(link: linkFeature),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: Image(
-                              image:
-                                  AssetImage('assets/images/img_no_media.png'),
-                              width: 100.0,
-                            ),
-                          );
-                        }
-
-                        return Image(
-                          image: NetworkImage(snapshot.data),
-                          fit: BoxFit.cover,
-                        );
-                      }),
+                  child: CachedNetworkImage(
+                    imageUrl: image,
+                    fit: BoxFit.cover,
+                    errorWidget: (c, v, i) {
+                      return Center(
+                        child: Image(
+                          image: AssetImage('assets/images/img_no_media.png'),
+                          width: 100.0,
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 Positioned(
                   bottom: 0,
