@@ -1,4 +1,3 @@
-import 'package:azul_project/api/api.dart';
 import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/models/categories.dart';
@@ -48,10 +47,6 @@ class _ContentScreenState extends State<ContentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: Icon(Icons.link),
-      // ),
       body: Column(
         children: [
           CardTopBarContent(selectedIndexPost: _selectedPage),
@@ -74,51 +69,51 @@ class _ContentScreenState extends State<ContentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Stack(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                height: 230.0,
-                                margin: EdgeInsets.only(bottom: 10.0),
-                                color: kColorGreyNoMedia,
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.listNews[i].image,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (c, v, i) {
-                                    return Center(
-                                      child: Image(
-                                        image: AssetImage(
-                                            'assets/images/img_no_media.png'),
-                                        width: 100.0,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 12.0, vertical: 5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: Text(
-                                    '${widget.caty.name}',
-                                    style: kStyleCategory,
+                          Hero(
+                            tag: widget.listNews[i].image,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  height: 230.0,
+                                  margin: EdgeInsets.only(bottom: 10.0),
+                                  color: kColorGreyNoMedia,
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.listNews[i].image,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (c, v, i) {
+                                      return Center(
+                                        child: Image(
+                                          image: AssetImage(
+                                              'assets/images/img_no_media.png'),
+                                          width: 100.0,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                              ),
-                            ],
+                                Positioned(
+                                  bottom: 0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 12.0, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Text(
+                                      '${widget.caty.name}',
+                                      style: kStyleCategory,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(height: 8),
-                          Hero(
-                            tag: '${widget.indexNews}1',
-                            child: Text(
-                              '${widget.listNews[i].title.rendered}',
-                              style: kStyleTitlePost,
-                            ),
+                          Text(
+                            '${widget.listNews[i].title.rendered}',
+                            style: kStyleTitlePost,
                           ),
                           SizedBox(height: 3),
                           Text(
@@ -128,10 +123,6 @@ class _ContentScreenState extends State<ContentScreen> {
                             ),
                           ),
                           CardSharePost(),
-                          // Text(
-                          //   '$_descrip',
-                          //   style: kStyleDecripPost,
-                          // ),
                           Html(
                             data:
                                 "<div>${widget.listNews[i].content.rendered}</div>",

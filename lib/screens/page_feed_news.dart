@@ -11,36 +11,43 @@ import 'content_screen.dart';
 class ArticlePages extends StatelessWidget {
   final List<News> newsContent;
   final Categories caty;
-  final Function onLoadMore;
+  final onLoadMore;
+  final Function onRefrech;
 
   ArticlePages({
     @required this.newsContent,
     @required this.caty,
     @required this.onLoadMore,
+    @required this.onRefrech,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.symmetric(),
-      children: [
-        for (int index = 0; index < newsContent.length; index++)
-          CardPostNews(
-            title: newsContent[index].title.rendered,
-            date: newsContent[index].date,
-            image: newsContent[index].image,
-            category: caty,
-            idNews: newsContent[index].id,
-            onTap: () {
-              Get.to(() => ContentScreen(
-                    listNews: newsContent,
-                    indexNews: index,
-                    caty: caty,
-                  ));
-            },
-          ),
-        CardLoadMoreNews(onLoadMore: onLoadMore),
-      ],
+    return RefreshIndicator(
+      onRefresh: onRefrech,
+      child: ListView(
+        padding: EdgeInsets.symmetric(),
+        children: [
+          for (int index = 0; index < newsContent.length; index++)
+            CardPostNews(
+              title: newsContent[index].title.rendered,
+              date: newsContent[index].date,
+              image: newsContent[index].image,
+              category: caty,
+              idNews: newsContent[index].id,
+              onTap: () {
+                Get.to(() => ContentScreen(
+                      listNews: newsContent,
+                      indexNews: index,
+                      caty: caty,
+                    ));
+              },
+            ),
+          onLoadMore != null
+              ? CardLoadMoreNews(onLoadMore: onLoadMore)
+              : SizedBox(),
+        ],
+      ),
     );
   }
 }

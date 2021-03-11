@@ -1,8 +1,8 @@
-import 'package:azul_project/api/api.dart';
+
 import 'package:azul_project/helpers/colors.dart';
 import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/models/categories.dart';
-import 'package:azul_project/screens/content_screen.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,42 +34,45 @@ class CardPostNews extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 230.0,
-                  margin: EdgeInsets.only(bottom: 10.0),
-                  color: kColorGreyNoMedia,
-                  child: CachedNetworkImage(
-                    imageUrl: image,
-                    fit: BoxFit.cover,
-                    errorWidget: (c, v, i) {
-                      return Center(
-                        child: Image(
-                          image: AssetImage('assets/images/img_no_media.png'),
-                          width: 100.0,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Text(
-                      '${category.name}',
-                      style: kStyleCategory,
+            Hero(
+              tag: image,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 230.0,
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    color: kColorGreyNoMedia,
+                    child: CachedNetworkImage(
+                      imageUrl: image,
+                      fit: BoxFit.cover,
+                      errorWidget: (c, v, i) {
+                        return Center(
+                          child: Image(
+                            image: AssetImage('assets/images/img_no_media.png'),
+                            width: 100.0,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Text(
+                        '${category.name}',
+                        style: kStyleCategory,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 5),
             Text(
@@ -140,7 +143,7 @@ class CardTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mSize = MediaQuery.of(context).size;
+ 
     return InkWell(
       onTap: onTap,
       child: Container(

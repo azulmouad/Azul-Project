@@ -1,10 +1,14 @@
+
+import 'dart:io';
+
 import 'package:azul_project/api/api.dart';
-import 'package:azul_project/helpers/colors.dart';
+
 import 'package:azul_project/helpers/constants.dart';
 import 'package:azul_project/models/categories.dart';
 import 'package:azul_project/models/news.dart';
 import 'package:azul_project/screens/page_feed_news.dart';
 import 'package:azul_project/widgets/widget_home.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _indexCategory = 0; // Home as Default
   int _pageCount = 1; // Count 1 as Default
   bool _progress = true;
+  bool _deviceIsOnline = true;
 
   List<Categories> _listCategories = [];
   List<News> _listNews = [];
@@ -41,14 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<News> _listNewsApi =
         await ApiHelper.getHomeNews(pageIndex: _pageCount);
     for (var news in _listNewsApi) {
-      // if (_listCategories[_indexCategory].id == news.categories[0]) {
-      //   print(
-      //       '${_listCategories[_indexCategory].id} ${news.categories[0]} : ${news.title.rendered}');
-      // } else {
-      //   print(
-      //       '${_listCategories[_indexCategory].id} ${news.categories[0]} : ${news.title.rendered}');
-      // }
-
       setState(() {
         _listNews.add(News(
           id: news.id,
@@ -66,17 +63,50 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  _checkDeviceConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        setState(() {
+          _deviceIsOnline = true;
+          _progress = true;
+        });
+        _listCategories.clear();
+        _listNews.clear();
+        _getCategories();
+        _getNewsSelectedCategory();
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+      setState(() {
+        _deviceIsOnline = false;
+      });
+      //show snack to user
+      final snackBar = SnackBar(
+          content: Text(
+              'يرجى تشغيل اتصال الإنترنت الخاص بك للحصول على آخر الأخبار'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
   @override
   void initState() {
     _getCategories();
     _getNewsSelectedCategory();
+    _checkDeviceConnection();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final mSize = MediaQuery.of(context);
-    // _getNewsSelectedCategory();
     return Scaffold(
       body: Column(
         children: [
@@ -134,13 +164,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ArticlePages(
                     newsContent: _listNews,
                     caty: _listCategories[_indexCategory],
-                    onLoadMore: () {
-                      setState(() {
-                        _progress = true;
-                        _pageCount = _pageCount + 1;
-                      });
-                      _getNewsSelectedCategory();
+                    onRefrech: () async {
+                      await _checkDeviceConnection();
                     },
+                    onLoadMore: _deviceIsOnline
+                        ? () {
+                            setState(() {
+                              _progress = true;
+                              _pageCount = _pageCount + 1;
+                            });
+                            _getNewsSelectedCategory();
+                          }
+                        : null,
                   ),
               ],
             ),
